@@ -71,6 +71,7 @@ public abstract class Characters : MonoBehaviour
     { get { return isMagicMode; } set { isMagicMode = value; } }
 
     protected VFXManager vfxManager;
+    protected UIManager uiManager;
 
     private void Awake()
     {
@@ -83,9 +84,10 @@ public abstract class Characters : MonoBehaviour
         
     }
 
-    public void CharInit(VFXManager vfxM) 
+    public void CharInit(VFXManager vfxM, UIManager uiM) 
     {
         vfxManager = vfxM;
+        uiManager = uiM;
     }
 
     public void ReceiveDamage(int damage) 
@@ -263,6 +265,8 @@ public abstract class Characters : MonoBehaviour
         isMagicMode = false;
 
         SetState(CharState.Idle);
+        if (uiManager != null)
+            uiManager.IsOnCurToggleMagic(false);
     }
 
     private IEnumerator LoadMagicCast(Magic curMagicCast) 
@@ -306,6 +310,8 @@ public abstract class Characters : MonoBehaviour
             MagicCast(curMagicCast);
         }
     }
+
+    
 
 
     

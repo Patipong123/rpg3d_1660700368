@@ -32,6 +32,8 @@ public class VFXManager : MonoBehaviour
         if (magicVFX[id] == null)
             return;
 
+        posA += Vector3.up * 1.2f;
+
         GameObject objLoad = Instantiate(magicVFX[id], posA, Quaternion.identity);
         Destroy(objLoad, time);
     }
@@ -40,6 +42,9 @@ public class VFXManager : MonoBehaviour
     {
         if (magicVFX[id] == null)
             return;
+
+        posA += Vector3.up * 1.2f;
+        posB += Vector3.up * 1.2f;
 
         GameObject objShoot = Instantiate(magicVFX[id], posA, Quaternion.identity);
         objShoot.transform.position = Vector3.LerpUnclamped(posA, posB, time);
