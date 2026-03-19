@@ -3925,6 +3925,7 @@ GameObject:
   - component: {fileID: 958779316}
   - component: {fileID: 958779317}
   - component: {fileID: 958779318}
+  - component: {fileID: 958779319}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -3995,6 +3996,9 @@ MonoBehaviour:
   - {fileID: 1236643204216662, guid: 0c946638b2f107d4abf22f8cacd7a05c, type: 3}
   - {fileID: 1722081097931586, guid: 81cd72aae4a36504a87efd9cef765b82, type: 3}
   - {fileID: 1739096776086156, guid: f9c28a4ac9917b84e91e618c951f56b3, type: 3}
+  magicData:
+  - {fileID: 11400000, guid: 4473e0abcf5b54743bfe65e9086b1a84, type: 2}
+  - {fileID: 11400000, guid: 73ec7ea00c35a424ea76baf7c18a168f, type: 2}
 --- !u!114 &958779318
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4011,6 +4015,23 @@ MonoBehaviour:
   - {fileID: 1110665317}
   - {fileID: 591227365}
   selectChars: []
+--- !u!114 &958779319
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 958779312}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65c006bfbfb63f044a5bc55258883e31, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InventoryManager
+  itemPrefabs: []
+  itemData:
+  - {fileID: 11400000, guid: 36db04c40e54e9d44b1395604423bb4e, type: 2}
+  - {fileID: 11400000, guid: 2b39d151c09e18540ae0e6c068f19c67, type: 2}
+  - {fileID: 11400000, guid: 3f86b0bd2db173b4f8be8d6aa11133a6, type: 2}
 --- !u!1 &991123626
 GameObject:
   m_ObjectHideFlags: 0
