@@ -2845,7 +2845,7 @@ GameObject:
   - component: {fileID: 548341329}
   - component: {fileID: 548341328}
   m_Layer: 5
-  m_Name: Button (3)
+  m_Name: InventoryButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4764,6 +4764,13 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 36db04c40e54e9d44b1395604423bb4e, type: 2}
   - {fileID: 11400000, guid: 2b39d151c09e18540ae0e6c068f19c67, type: 2}
   - {fileID: 11400000, guid: 3f86b0bd2db173b4f8be8d6aa11133a6, type: 2}
+  - {fileID: 11400000, guid: eec89f43bf9dba94c8360cc4a72bd496, type: 2}
+  - {fileID: 11400000, guid: fe7c3ca7ca6dc00429d0d921487a1651, type: 2}
+  - {fileID: 11400000, guid: 8e950da81c1933d4db9a9d887d3b2674, type: 2}
+  - {fileID: 11400000, guid: 32fed325c86c6b540828985ca8e4340c, type: 2}
+  - {fileID: 11400000, guid: d5627dbd5d2546e4282b033ccad661f0, type: 2}
+  - {fileID: 11400000, guid: 930badf38cb05394dbba56782f997479, type: 2}
+  - {fileID: 11400000, guid: 237f9a213b41d36468f21b347f20e9a3, type: 2}
 --- !u!1001 &970479765
 PrefabInstance:
   m_ObjectHideFlags: 0
