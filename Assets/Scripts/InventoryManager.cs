@@ -54,8 +54,7 @@ public class InventoryManager : MonoBehaviour
     private void SpawnDropItem(Item item, Vector3 pos) 
     {
         int id;
-
-        switch (item.Type) 
+        switch (item.Type)
         {
             case ItemType.Consumable:
                 id = 1;
@@ -65,9 +64,19 @@ public class InventoryManager : MonoBehaviour
                 break;
         }
 
-        GameObject itemObj = Instantiate(ItemPrefabs[id], pos, Quaternion.identity);
-        itemObj.AddComponent<ItemPick>();
+        
+        float scatterRadius = 1.5f;
+        Vector3 randomPos = new Vector3(
+            Random.Range(-scatterRadius, scatterRadius),
+            0, 
+            Random.Range(-scatterRadius, scatterRadius)
+        );
 
+        Vector3 finalPos = pos + randomPos;
+        
+        GameObject itemObj = Instantiate(ItemPrefabs[id], finalPos, Quaternion.identity);
+
+        itemObj.AddComponent<ItemPick>();
         ItemPick itemPick = itemObj.GetComponent<ItemPick>();
         itemPick.Init(item, this, PartyManager.instance);
 
