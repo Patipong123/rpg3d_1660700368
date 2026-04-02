@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   id: 3
   itemName: Axe Common
-  type: 2
+  type: 4
   icon: {fileID: 21300000, guid: 6debf676f580362418a3378d85c3e523, type: 3}
   power: 20
+  prefabID: 3

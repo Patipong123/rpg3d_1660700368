@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using static UnityEditor.Progress;
 
 public class InventoryManager : MonoBehaviour
 {
@@ -10,7 +11,7 @@ public class InventoryManager : MonoBehaviour
     private ItemData[] itemData;
     public ItemData[] ItemData { get { return itemData; } set { itemData = value; } }
 
-    public const int MAXSLOT = 16;
+    public const int MAXSLOT = 18;
 
     public static InventoryManager instance;
 
@@ -41,6 +42,16 @@ public class InventoryManager : MonoBehaviour
             return;
 
         PartyManager.instance.SelectChars[0].InventoryItem[index] = item;
+
+        switch (index) 
+        {
+            case 16:
+                PartyManager.instance.SelectChars[0].EquipShield(item);
+                break;
+            case 17:
+                PartyManager.instance.SelectChars[0].EquipWeapon(item);
+                break;
+        }
     }
 
     public void RemoveItemInBag(int index) 
@@ -49,6 +60,16 @@ public class InventoryManager : MonoBehaviour
             return;
 
         PartyManager.instance.SelectChars[0].InventoryItem[index] = null;
+
+        switch (index)
+        {
+            case 16:
+                PartyManager.instance.SelectChars[0].UnEquipShield();
+                break;
+            case 17:
+                PartyManager.instance.SelectChars[0].UnEquipWeapon();
+                break;
+        }
     }
 
     private void SpawnDropItem(Item item, Vector3 pos) 
@@ -89,6 +110,18 @@ public class InventoryManager : MonoBehaviour
         {
             if (items[i] != null)
                 SpawnDropItem(items[i], pos);
+        }
+    }
+
+    public void DrinkConsumableItem(Item item, int slotId) 
+    {
+        string s = string.Format("Drink: {0}", item.ItemName);
+        Debug.Log(s);
+
+        if (PartyManager.instance.SelectChars.Count > 0) 
+        {
+            PartyManager.instance.SelectChars[0].Recover(item.Power);
+            RemoveItemInBag(slotId);
         }
     }
 }

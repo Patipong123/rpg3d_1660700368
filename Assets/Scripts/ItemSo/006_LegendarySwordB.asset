@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   id: 6
   itemName: Legendary Big Sword
-  type: 2
+  type: 4
   icon: {fileID: 21300000, guid: 3d6d44c7d4dd9e9439e9fe0a7ae8ed7e, type: 3}
   power: 200
+  prefabID: 6

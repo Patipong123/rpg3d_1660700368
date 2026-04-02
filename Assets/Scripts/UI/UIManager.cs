@@ -24,10 +24,22 @@ public class UIManager : MonoBehaviour
     private GameObject inventoryPanel;
 
     [SerializeField]
+    private GameObject grayImage;
+
+    [SerializeField]
+    private GameObject itemDialog;
+
+    [SerializeField]
     private GameObject itemUIprefab;
 
     [SerializeField]
     private GameObject[] slots;
+
+    [SerializeField]
+    private ItemDrag curItemDrag;
+
+    [SerializeField]
+    private int curSlotId;
 
     public static UIManager instance;
 
@@ -47,23 +59,23 @@ public class UIManager : MonoBehaviour
             togglePauseUnpause.isOn = !togglePauseUnpause.isOn;
     }
 
-    public void ToggleAI(bool isOn) 
+    public void ToggleAI(bool isOn)
     {
-        foreach (Characters member in PartyManager.instance.Members) 
+        foreach (Characters member in PartyManager.instance.Members)
         {
             AttackAI ai = member.gameObject.GetComponent<AttackAI>();
 
             if (ai != null)
                 ai.enabled = isOn;
-            
+
         }
     }
 
-    public void SelectAll() 
+    public void SelectAll()
     {
-        foreach (Characters member in PartyManager.instance.Members) 
+        foreach (Characters member in PartyManager.instance.Members)
         {
-            if (member.CurHP > 0) 
+            if (member.CurHP > 0)
             {
                 member.ToggleRingSelection(true);
                 PartyManager.instance.SelectChars.Add(member);
@@ -71,19 +83,19 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void PauseUnpause(bool isOn) 
+    public void PauseUnpause(bool isOn)
     {
         Time.timeScale = isOn ? 0 : 1;
     }
 
-    public void ShowMagicToggles() 
+    public void ShowMagicToggles()
     {
         if (PartyManager.instance.SelectChars.Count <= 0)
             return;
 
         Characters hero = PartyManager.instance.SelectChars[0];
 
-        for (int i = 0; i < hero.MagicSkills.Count; i++) 
+        for (int i = 0; i < hero.MagicSkills.Count; i++)
         {
             toggleMagic[i].interactable = true;
             toggleMagic[i].isOn = false;
@@ -92,18 +104,18 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void SelectMagicSkill(int i) 
+    public void SelectMagicSkill(int i)
     {
         curToggleMagicID = i;
         PartyManager.instance.HeroSelectMagicSkill(i);
     }
 
-    public void IsOnCurToggleMagic(bool flag) 
+    public void IsOnCurToggleMagic(bool flag)
     {
         toggleMagic[curToggleMagicID].isOn = flag;
     }
 
-    public void ToggleInventoryPanel() 
+    public void ToggleInventoryPanel()
     {
         if (!inventoryPanel.activeInHierarchy)
         {
@@ -111,7 +123,7 @@ public class UIManager : MonoBehaviour
             blackImage.SetActive(true);
             ShowInventory();
         }
-        else 
+        else
         {
             inventoryPanel.SetActive(false);
             blackImage.SetActive(false);
@@ -119,11 +131,11 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void ClearInventory() 
+    public void ClearInventory()
     {
-        for (int i = 0; i < slots.Length; i++) 
+        for (int i = 0; i < slots.Length; i++)
         {
-            if (slots[i].transform.childCount > 0) 
+            if (slots[i].transform.childCount > 0)
             {
                 Transform child = slots[i].transform.GetChild(0);
                 Destroy(child.gameObject);
@@ -131,19 +143,21 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void ShowInventory() 
+    public void ShowInventory()
     {
         if (PartyManager.instance.SelectChars.Count <= 0)
             return;
 
         Characters hero = PartyManager.instance.SelectChars[0];
 
-        for (int i = 0; i < hero.InventoryItem.Length; i++) 
+        for (int i = 0; i < hero.InventoryItem.Length; i++)
         {
-            if (hero.InventoryItem[i] != null) 
+            if (hero.InventoryItem[i] != null)
             {
                 GameObject itemObj = Instantiate(itemUIprefab, slots[i].transform);
                 ItemDrag itemDrag = itemObj.GetComponent<ItemDrag>();
+
+                itemDrag.UIManager = this;
 
                 itemDrag.Item = hero.InventoryItem[i];
                 itemDrag.IconParent = slots[i].transform;
@@ -152,11 +166,35 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    private void InitSlots() 
+    private void InitSlots()
     {
-        for (int i = 0; i < InventoryManager.MAXSLOT; i++) 
+        for (int i = 0; i < InventoryManager.MAXSLOT; i++)
         {
             slots[i].GetComponent<InventorySlot>().ID = i;
         }
+    }
+
+    public void SetCurItemInUse(ItemDrag itemDrag, int index)
+    {
+        curItemDrag = itemDrag;
+        curSlotId = index;
+    }
+
+    public void ToggleItemDialog(bool flag)
+    {
+        grayImage.SetActive(flag);
+        itemDialog.SetActive(flag);
+    }
+
+    public void DeleteItemIcon()
+    {
+        Destroy(curItemDrag.gameObject);
+    }
+
+    public void ClickDrinkConsumable() 
+    {
+        InventoryManager.instance.DrinkConsumableItem(curItemDrag.Item, curSlotId);
+        DeleteItemIcon();
+        ToggleItemDialog(false);
     }
 }
