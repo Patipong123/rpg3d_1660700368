@@ -15,6 +15,6 @@ MonoBehaviour:
   id: 10
   itemName: MagicPotion
   type: 0
-  icon: {fileID: 0}
-  power: 0
-  prefabID: 0
+  icon: {fileID: 21300000, guid: 7bbf9e00fc9082e43810b63eba813fa9, type: 3}
+  power: 20
+  prefabID: 4

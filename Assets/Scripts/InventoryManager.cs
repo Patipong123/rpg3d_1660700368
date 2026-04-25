@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 using static UnityEditor.Progress;
 
 public class InventoryManager : MonoBehaviour
@@ -123,5 +124,28 @@ public class InventoryManager : MonoBehaviour
             PartyManager.instance.SelectChars[0].Recover(item.Power);
             RemoveItemInBag(slotId);
         }
+    }
+
+    public bool CheckPartyForItem(int id) 
+    {
+        Item item = new Item(itemData[id]);
+        Debug.Log(item.ItemName);
+
+        List<Characters> party = PartyManager.instance.Members;
+
+        foreach (Characters hero in party) 
+        {
+            for (int i = 0; i < hero.InventoryItem.Length; i++) 
+            {
+                if (hero.InventoryItem[i] == null)
+                    continue;
+
+                Debug.Log(hero.InventoryItem[i].ItemName);
+
+                if (hero.InventoryItem[i].ID == item.ID)
+                    return true;
+            }
+        }
+        return false;
     }
 }
