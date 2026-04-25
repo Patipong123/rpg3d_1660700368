@@ -49,6 +49,9 @@ public class RightClick : MonoBehaviour
                 case "Enemy":
                     CommandToAttack(hit, PartyManager.instance.SelectChars);
                     break;
+                case "NPC":
+                    CommandTalkToNPC(hit, PartyManager.instance.SelectChars);
+                    break;
             }
         }
     }
@@ -71,5 +74,16 @@ public class RightClick : MonoBehaviour
         {
             h.ToAttackCharacter(target);
         }
+    }
+
+    private void CommandTalkToNPC(RaycastHit hit, List<Characters> heros) 
+    {
+        Characters npc = hit.collider.GetComponent<Characters>();
+        Debug.Log("Talk to NPC : " + npc);
+
+        if(heros.Count <= 0)
+            return;
+
+        heros[0].ToTalkToNPC(npc);
     }
 }
