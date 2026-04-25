@@ -79,9 +79,13 @@ public class RightClick : MonoBehaviour
     private void CommandTalkToNPC(RaycastHit hit, List<Characters> heros) 
     {
         Characters npc = hit.collider.GetComponent<Characters>();
+        Npc npc2 = hit.collider.GetComponent<Npc>();
         Debug.Log("Talk to NPC : " + npc);
 
         if(heros.Count <= 0)
+            return;
+
+        if (npc2.CheckQuestList(QuestStatus.Finish) != null)
             return;
 
         heros[0].ToTalkToNPC(npc);

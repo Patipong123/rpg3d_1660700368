@@ -335,4 +335,59 @@ public class UIManager : MonoBehaviour
         SetupDialoguePanel(npc);
         ToggleDialogueBox(true);
     }
+
+    public void AnswerNext()
+    {
+        index++;
+        dialogueText.text = QuestManager.instance.NextDialouge(index);
+
+        if (QuestManager.instance.CheckLastDialouge(index))
+        {
+            btnNext.SetActive(false);
+
+            btnAcceptText.text = QuestManager.instance.CurQuest.AnswersAccept;
+            btnAccept.SetActive(true);
+
+            btnRejectText.text = QuestManager.instance.CurQuest.AnswerReject;
+            btnReject.SetActive(true);
+        }
+        else 
+        {
+            btnNext.SetActive(true);
+            btnNextText.text = QuestManager.instance.CurQuest.AnswersNext[index];
+        }
+    }
+
+    public void AnswerReject() 
+    {
+        QuestManager.instance.RejectQuest();
+        ToggleDialogueBox(false);
+    }
+
+    public void AnswerAccept() 
+    {
+        QuestManager.instance.AcceptQuest();
+        ToggleDialogueBox(false);
+    }
+
+    public void AnswerFinish() 
+    {
+        Debug.Log("Can Finish Quest");
+        bool success = QuestManager.instance.DeliverItem();
+
+        if (success) 
+        {
+            if (QuestManager.instance.NpcGiveReward()) 
+            {
+                Debug.Log("Quest Completed");
+                ToggleDialogueBox(false);
+            }
+        }
+    }
+
+    public void AnswerNotFinish() 
+    {
+        Debug.Log("Cannot Finish Quest");
+        ToggleDialogueBox(false);
+    }
 }
