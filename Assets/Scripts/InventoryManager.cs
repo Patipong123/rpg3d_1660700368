@@ -21,6 +21,13 @@ public class InventoryManager : MonoBehaviour
         instance = this;
     }
 
+    private void Start()
+    {
+        AddiTemShopToNPC(1,0);
+        AddiTemShopToNPC(1, 3);
+        AddiTemShopToNPC(1, 4);
+    }
+
     public bool AddItem(Characters character, int id) 
     {
         Item item = new Item(ItemData[id]);
@@ -173,6 +180,12 @@ public class InventoryManager : MonoBehaviour
             }
         }
         return false;
+    }
+
+    private void AddiTemShopToNPC(int npcId, int itemId) 
+    {
+        Item item = new Item(itemData[itemId]);
+        QuestManager.instance.NPCPerson[npcId].ShopItems.Add(item);
     }
     
 }

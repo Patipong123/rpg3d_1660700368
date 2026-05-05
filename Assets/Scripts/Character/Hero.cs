@@ -74,8 +74,23 @@ public class Hero : Characters
             SetState(CharState.Idle);
 
             Npc npc = curCharTarget.GetComponent<Npc>();
+            if (npc.IsShopKeeper)
+                uiManager.PreparShopPanel(npc, this);
+            else
+                uiManager.PrepareDialogueBox(npc);
 
-            uiManager.PrepareDialogueBox(npc);
+        }
+    }
+
+    public void SaveItemInInventory(Item item) 
+    {
+        for (int i = 0; i < 16; i++) 
+        {
+            if (InventoryItem[i] == null) 
+            {
+                InventoryItem[i] = item;
+                return;
+            }
         }
     }
 }
