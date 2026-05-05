@@ -94,6 +94,27 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     private TMP_Text btnNotFinishText;
 
+    [SerializeField]
+    private Toggle[] toggleAvatar;
+    public Toggle[] ToggleAvatar { get { return toggleAvatar;  } set { toggleAvatar = value; } }
+
+    //---------------------------------
+
+    [SerializeField]
+    private GameObject CharPanel;
+
+    [SerializeField]
+    private TMP_Text CharNameText;
+
+    [SerializeField]
+    private TMP_Text statText;
+
+    [SerializeField]
+    private TMP_Text abilityText;
+
+    [SerializeField]
+    private Image heroImage;
+
     public static UIManager instance;
 
     private void Awake()
@@ -104,6 +125,7 @@ public class UIManager : MonoBehaviour
     private void Start()
     {
         InitSlots();
+        MapToggleAvatar();
     }
 
     private void Update()
@@ -389,5 +411,117 @@ public class UIManager : MonoBehaviour
     {
         Debug.Log("Cannot Finish Quest");
         ToggleDialogueBox(false);
+    }
+
+    public void MapToggleAvatar() 
+    {
+        foreach (Toggle t in toggleAvatar)
+            t.gameObject.SetActive(false);
+
+        for (int i = 0; i < PartyManager.instance.Members.Count; i++) 
+        {
+            toggleAvatar[i].gameObject.SetActive(true);
+
+            Image avatarImg = toggleAvatar[i].transform.Find("AvatarImage").GetComponent<Image>();
+            avatarImg.sprite = PartyManager.instance.Members[i].AvatarPic;
+        }
+        toggleAvatar[0].isOn = true;
+
+        Invoke("UpdateAvatarBrightness", 0.1f);
+    }
+
+    public void SelectHeroByAvatar(int i) 
+    {
+        if (toggleAvatar[i].isOn)
+        {
+            PartyManager.instance.SelectSingleHeroByToggle(i);
+            if (CharPanel.activeInHierarchy) 
+            {
+                Hero hero = (Hero)PartyManager.instance.Members[i];
+                CharNameText.text = hero.CharName;
+                statText.text = string.Format(
+                    "Level: {0}\nExperience: {1}\nAttack Damage: {2}\nDefense Power: {3}",
+                    hero.Level, hero.Exp, hero.AttackDamage, hero.DefensePower);
+                abilityText.text = string.Format(
+                    "Strength: {0}\nDexterity: {1}\nConstitution: {2}\nIntelligence: {3}\nWisdom: {4}\nCharisma: {5}",
+                    hero.Strength, hero.Dexterity, hero.Constitution,
+                    hero.Intelligence, hero.Wisdom, hero.Charisma);
+                heroImage.sprite = hero.AvatarPic;
+            }
+                
+        }
+        else 
+        {
+            PartyManager.instance.UnSelectSingleHeroByToggle(i);
+        }
+
+        UpdateAvatarBrightness();
+    }
+
+    private void UpdateAvatarBrightness()
+    {
+        Debug.Log("UpdateAvatarBrightness called");
+        for (int i = 0; i < PartyManager.instance.Members.Count; i++)
+        {
+            Image avatarImg = toggleAvatar[i].transform.Find("AvatarImage").GetComponent<Image>();
+
+            if (toggleAvatar[i].isOn)
+                avatarImg.color = Color.white;
+            else
+                avatarImg.color = new Color(0.4f, 0.4f, 0.4f, 1f);
+        }
+    }
+
+    public void ClearCharPanel() 
+    {
+        CharNameText.text = "";
+        statText.text = "";
+        abilityText.text = "";
+        heroImage.sprite = null;
+    }
+
+    public void ShowCharPanel() 
+    {
+        if (PartyManager.instance.SelectChars.Count == 0)
+            return;
+        Hero hero = (Hero)PartyManager.instance.SelectChars[0];
+
+        CharNameText.text = hero.CharName;
+
+        string stat = string.Format
+                             ("Level: {0}\nExperience: {1}\n" +
+                              "Attack Damage: {2}\nDefense Power: {3}"
+                               , hero.Level, hero.Exp,
+                                hero.AttackDamage, hero.DefensePower);
+
+        statText.text = stat;
+
+        string ability = string.Format
+                      ("Strength: {0}\nDexterity: {1}\n" +
+                       "Constitution: {2}\nIntelligence: {3}\n" +
+                       "Wisdon: {4}\nCharisma: {5}"
+                       , hero.Strength, hero.Dexterity,
+                       hero.Constitution, hero.Intelligence,
+                       hero.Wisdom, hero.Charisma);
+
+        abilityText.text = ability;
+
+        heroImage.sprite = hero.AvatarPic;
+    }
+
+    public void ToggleCharPanel() 
+    {
+        if (!CharPanel.activeInHierarchy)
+        {
+            CharPanel.SetActive(true);
+            blackImage.SetActive(true);
+            ShowCharPanel();
+        }
+        else 
+        {
+            CharPanel.SetActive(false);
+            blackImage.SetActive(false);
+            ClearCharPanel();
+        }
     }
 }

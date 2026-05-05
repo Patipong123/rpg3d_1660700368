@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.TextCore.Text;
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 
 public class LeftClick : MonoBehaviour
@@ -37,7 +38,7 @@ public class LeftClick : MonoBehaviour
             if (EventSystem.current.IsPointerOverGameObject())
                 return;
 
-            ClearEverything();
+            //ClearEverything();
         }
 
         if (Input.GetMouseButton(0)) 
@@ -57,13 +58,12 @@ public class LeftClick : MonoBehaviour
 
     private void SelectCharacter(RaycastHit hit) 
     {
+        ClearEverything();
         Characters hero = hit.collider.GetComponent<Characters>();
-        Debug.Log("Selected Char : " + hit.collider.gameObject);
+        //Debug.Log("Selected Char : " + hit.collider.gameObject);
 
-        
-        PartyManager.instance.SelectChars.Add(hero);
-        hero.ToggleRingSelection(hero);
-        UIManager.instance.ShowMagicToggles();
+        int i = PartyManager.instance.FindIndexFromClass(hero);
+        UIManager.instance.ToggleAvatar[i].isOn = true;
     }
 
     private void TrySelect(Vector2 screenPos) 
@@ -91,6 +91,9 @@ public class LeftClick : MonoBehaviour
 
     private void ClearEverything() 
     {
+        foreach (Toggle t in UIManager.instance.ToggleAvatar)
+            t.isOn = false;
+
         ClearRingSelection();
         PartyManager.instance.SelectChars.Clear();
     }
