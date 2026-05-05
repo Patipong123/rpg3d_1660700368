@@ -2,6 +2,7 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 public class UIManager : MonoBehaviour
 {
@@ -114,6 +115,21 @@ public class UIManager : MonoBehaviour
 
     [SerializeField]
     private Image heroImage;
+
+    [SerializeField]
+    private GameObject partyPanel;
+
+    [SerializeField]
+    private Toggle[] toggleRemove;
+
+    [SerializeField]
+    private int idToRemove = -1;
+
+    [SerializeField]
+    private Button removeButton;
+
+    [SerializeField]
+    private GameObject confirmPanel;
 
     public static UIManager instance;
 
@@ -418,16 +434,16 @@ public class UIManager : MonoBehaviour
         foreach (Toggle t in toggleAvatar)
             t.gameObject.SetActive(false);
 
-        for (int i = 0; i < PartyManager.instance.Members.Count; i++) 
+        for (int i = 0; i < PartyManager.instance.Members.Count; i++)
         {
             toggleAvatar[i].gameObject.SetActive(true);
-
             Image avatarImg = toggleAvatar[i].transform.Find("AvatarImage").GetComponent<Image>();
             avatarImg.sprite = PartyManager.instance.Members[i].AvatarPic;
         }
+
         toggleAvatar[0].isOn = true;
 
-        Invoke("UpdateAvatarBrightness", 0.1f);
+
     }
 
     public void SelectHeroByAvatar(int i) 
@@ -448,23 +464,24 @@ public class UIManager : MonoBehaviour
                     hero.Intelligence, hero.Wisdom, hero.Charisma);
                 heroImage.sprite = hero.AvatarPic;
             }
-                
+
+            
+
         }
         else 
         {
             PartyManager.instance.UnSelectSingleHeroByToggle(i);
         }
-
         UpdateAvatarBrightness();
     }
 
     private void UpdateAvatarBrightness()
     {
-        Debug.Log("UpdateAvatarBrightness called");
-        for (int i = 0; i < PartyManager.instance.Members.Count; i++)
+        for (int i = 0; i < toggleAvatar.Length; i++)
         {
-            Image avatarImg = toggleAvatar[i].transform.Find("AvatarImage").GetComponent<Image>();
+            if (!toggleAvatar[i].gameObject.activeSelf) continue;
 
+            Image avatarImg = toggleAvatar[i].transform.Find("AvatarImage").GetComponent<Image>();
             if (toggleAvatar[i].isOn)
                 avatarImg.color = Color.white;
             else
@@ -523,5 +540,79 @@ public class UIManager : MonoBehaviour
             blackImage.SetActive(false);
             ClearCharPanel();
         }
+    }
+
+    public void MapToggleRemove() 
+    {
+        foreach (Toggle t in toggleRemove)
+            t.gameObject.SetActive(false);
+
+        List<Characters> members = PartyManager.instance.Members;
+
+        for (int i = 1; i < members.Count; i++) 
+        {
+            toggleRemove[i - 1].gameObject.SetActive(true);
+            toggleRemove[i - 1].targetGraphic.GetComponent<Image>().sprite = members[i].AvatarPic;
+        }
+    }
+
+    private void CheckRemoveButton() 
+    {
+        switch (idToRemove) 
+        {
+            case -1:
+            case 0:
+                removeButton.interactable = false;
+                break;
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+            case 5:
+                removeButton.interactable = true;
+                break;
+            default:
+                removeButton.interactable = false; 
+                break;
+        }
+    }
+
+    public void TogglePartyPanel(bool flag) 
+    {
+        CharPanel.SetActive(!flag);
+        partyPanel.SetActive(flag);
+        MapToggleRemove();
+        CheckRemoveButton();
+    }
+
+    public void SelectToRemove(int i) 
+    {
+        if (toggleRemove[i - 1].isOn)
+            idToRemove = i;
+        else
+            idToRemove = -1;
+
+        CheckRemoveButton();
+    }
+
+    public void ToggleConfirmPanel(bool flag) 
+    {
+        if (flag == false) 
+        {
+            MapToggleRemove();
+            idToRemove = -1;
+            CheckRemoveButton() ;
+        }
+        partyPanel.SetActive(!flag);
+        confirmPanel.SetActive(flag);
+    }
+
+    public void RemoveMemberFromParty() 
+    {
+        PartyManager.instance.RemoveHeroFromParty(idToRemove);
+        toggleAvatar[idToRemove].isOn = false;
+        MapToggleAvatar();
+        ToggleConfirmPanel(false);
+        
     }
 }
