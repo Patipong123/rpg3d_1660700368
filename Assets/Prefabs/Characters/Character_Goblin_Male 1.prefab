@@ -885,7 +885,7 @@ GameObject:
   - component: {fileID: 4294703832727045041}
   m_Layer: 6
   m_Name: Character_Goblin_Male 1
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -958,12 +958,52 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
   curHP: 10
+  maxHP: 100
   curCharTarget: {fileID: 0}
   attackRange: 2
+  attackDamage: 3
   attackCoolDown: 2
   attackTimer: 0
+  findingRange: 20
+  avatarPic: {fileID: 0}
+  charName: 
   state: 0
   ringSelection: {fileID: 0}
+  magicSkills: []
+  curMagicCast:
+    id: 0
+    name: 
+    icon: {fileID: 0}
+    range: 0
+    power: 0
+    loadtime: 0
+    shootTime: 0
+    loadId: 0
+    shootId: 0
+  isMagicMode: 0
+  inventoryItem: []
+  weapon:
+    id: 0
+    itemName: 
+    type: 0
+    icon: {fileID: 0}
+    power: 0
+    prefabID: 0
+    normalPrice: 0
+  weaponHand: {fileID: 0}
+  weaponObj: {fileID: 0}
+  shield:
+    id: 0
+    itemName: 
+    type: 0
+    icon: {fileID: 0}
+    power: 0
+    prefabID: 0
+    normalPrice: 0
+  shieldHand: {fileID: 0}
+  shieldObj: {fileID: 0}
+  defensePower: 0
+  expDrop: 30
 --- !u!114 &-2474409369273946306
 MonoBehaviour:
   m_ObjectHideFlags: 0

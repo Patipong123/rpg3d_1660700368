@@ -11,6 +11,10 @@ public class Hero : Characters
     public int Level { get { return level; } set { level = value; } }
 
     [SerializeField]
+    private int nextExp;
+    public int NextExp { get { return nextExp; } set { nextExp = value; } }
+
+    [SerializeField]
     private int strength;
     public int Strength { get { return strength; } set { strength = value; } }
 
@@ -74,10 +78,20 @@ public class Hero : Characters
             SetState(CharState.Idle);
 
             Npc npc = curCharTarget.GetComponent<Npc>();
-            if (npc.IsShopKeeper)
-                uiManager.PreparShopPanel(npc, this);
-            else
-                uiManager.PrepareDialogueBox(npc);
+
+            if (npc != null)
+            {
+                if (npc.IsShopKeeper)
+                    uiManager.PreparShopPanel(npc, this);
+                else
+                    uiManager.PrepareDialogueBox(npc);
+            }
+            else 
+            {
+                Hero hero = curCharTarget.GetComponent<Hero>();
+                uiManager.PrepareHeroJoinParty(hero);
+            }
+            
 
         }
     }
@@ -91,6 +105,52 @@ public class Hero : Characters
                 InventoryItem[i] = item;
                 return;
             }
+        }
+    }
+
+    public void ReciveExp(int n) 
+    {
+        exp += n;
+        CheckLevel(exp);
+    }
+
+    private void UpdateStat() 
+    {
+        attackDamage++;
+        defensePower++;
+        maxHP++;
+
+        if (strength >= Random.Range(1, 20))
+            attackDamage++;
+
+        if (dexterity >= Random.Range(1,20))
+            defensePower++;
+
+        if (constitution >= Random.Range(1,2))
+            maxHP++;
+    }
+
+    private void CheckLevel(int exp) 
+    {
+        nextExp = level * 30;
+
+        if (exp >= nextExp) 
+        {
+            level++;
+            nextExp = level * 30;
+            UpdateStat();
+        }
+
+        switch (level) 
+        {
+            case 5:
+                magicSkills.Add(new Magic(vfxManager.MagicData[0]));
+                uiManager.ShowMagicToggles();
+                break;
+            case 10:
+                magicSkills.Add(new Magic(vfxManager.MagicData[1]));
+                uiManager.ShowMagicToggles();
+                break;
         }
     }
 }

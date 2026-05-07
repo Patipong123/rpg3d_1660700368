@@ -50,6 +50,7 @@ public class RightClick : MonoBehaviour
                     CommandToAttack(hit, PartyManager.instance.SelectChars);
                     break;
                 case "NPC":
+                case "Hero":
                     CommandTalkToNPC(hit, PartyManager.instance.SelectChars);
                     break;
             }
@@ -85,7 +86,7 @@ public class RightClick : MonoBehaviour
         if(heros.Count <= 0)
             return;
 
-        if (npc2.CheckQuestList(QuestStatus.Finish) != null)
+        if (npc2 != null && npc2.CheckQuestList(QuestStatus.Finish) != null)
             return;
 
         heros[0].ToTalkToNPC(npc);
