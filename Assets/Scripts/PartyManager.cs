@@ -4,6 +4,10 @@ using System.Collections.Generic;
 public class PartyManager : MonoBehaviour
 {
     [SerializeField]
+    private HeroData[] heroData;
+    public HeroData[] HeroDatas { get { return heroData; } }
+
+    [SerializeField]
     private List<Characters> members = new List<Characters>();
     public List<Characters> Members { get { return members; } }
 
@@ -31,29 +35,10 @@ public class PartyManager : MonoBehaviour
 
     private void Start()
     {
-        foreach (Characters c in members) 
-        {
-            c.CharInit(VFXManager.instance,
-                UIManager.instance, InventoryManager.instance, this);
-        }
+        if (members.Count == 0)
+            return;
 
         SelectSingleHero(0);
-
-        /*mbers[0].MagicSkills.Add(new Magic(VFXManager.instance.MagicData[0]));
-        members[1].MagicSkills.Add(new Magic(VFXManager.instance.MagicData[1]));
-
-        InventoryManager.instance.AddItem(members[0], 0);
-        InventoryManager.instance.AddItem(members[0], 2);
-        InventoryManager.instance.AddItem(members[0], 3);
-        InventoryManager.instance.AddItem(members[0], 4);
-
-
-
-        InventoryManager.instance.AddItem(members[1], 0);
-        InventoryManager.instance.AddItem(members[1], 2);
-        InventoryManager.instance.AddItem(members[1], 3);*/
-
-
         UIManager.instance.ShowMagicToggles();
     }
 
@@ -159,5 +144,77 @@ public class PartyManager : MonoBehaviour
 
         members.Add(hero);
         return true;
+    }
+
+    public void SaveAllHeroData() 
+    {
+        for (int i = 0; i < members.Count; i++) 
+        {
+            Hero hero = (Hero)members[i];
+            heroData[i].prefabId = hero.PrefabID;
+            heroData[i].curHp = hero.CurHP;
+
+            for (int j = 0; j < hero.MagicSkills.Count; j++)
+                heroData[i].magicIds[j] = hero.MagicSkills[j].ID;
+
+            for (int k = 0; k < hero.InventoryItem.Length; k++)
+            {
+                if (hero.InventoryItem[k] == null)
+                    heroData[i].inventoryItemId[k] = -1;
+                else
+                    heroData[i].inventoryItemId[k] = hero.InventoryItem[k].ID;
+            }
+
+            heroData[i].attackDamage = hero.AttackDamage;
+            heroData[i].defensePower = hero.DefensePower;
+            heroData[i].exp = hero.Exp;
+            heroData[i].level = hero.Level;
+            heroData[i].nextExp = hero.NextExp;
+        }
+    }
+
+    public void LoadAllHeroData() 
+    {
+        int enterId = Settings.enterPointId;
+        Vector3 pos = MapManager.instance.EnterPoints[enterId].position;
+
+        for (int i = 0; i < Settings.PartyCount; i++)
+        {
+            GameObject heroObj =
+                Instantiate(GameManager.instance.HeroPrefabs[heroData[i].prefabId],
+                pos, Quaternion.identity);
+
+            if (i == 0)
+                heroObj.gameObject.tag = "Player";
+
+            Hero hero = heroObj.GetComponent<Hero>();
+            hero.CharInit(VFXManager.instance, UIManager.instance,
+                InventoryManager.instance, this);
+            hero.CurHP = heroData[i].curHp;
+
+            for (int j = 0; j < heroData[i].magicIds.Count; j++)
+            {
+                int magicId = heroData[i].magicIds[j];
+                hero.MagicSkills.Add(new Magic(VFXManager.instance.MagicData[magicId]));
+            }
+
+            for (int k = 0; k < heroData[i].inventoryItemId.Length; k++)
+            {
+                int itemId = heroData[i].inventoryItemId[k];
+                if (itemId != -1)
+                    hero.InventoryItem[k] =
+                        new Item(InventoryManager.instance.ItemData[itemId]);
+            }
+
+            hero.AttackDamage = heroData[i].attackDamage;
+            hero.DefensePower = heroData[i].defensePower;
+            hero.Exp = heroData[i].exp;
+            hero.Level = heroData[i].level;
+            hero.NextExp = heroData[i].nextExp;
+            members.Add(hero);
+        }
+
+        SelectSingleHero(0);
+        UIManager.instance.ShowMagicToggles();
     }
 }
