@@ -4,7 +4,7 @@ public class Hero : Characters
 {
     [SerializeField]
     private int prefabId;
-    public int PrefabID { get { return prefabId; } }
+    public int PrefabID { get { return prefabId; } set { prefabId = value; } }
 
     [SerializeField]
     private int exp;

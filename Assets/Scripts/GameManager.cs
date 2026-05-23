@@ -38,7 +38,8 @@ public class GameManager : MonoBehaviour
 
         heroObj.tag = "Player";
 
-        Characters hero = heroObj.GetComponent<Characters>();
+        Hero hero = heroObj.GetComponent<Hero>();
+        hero.PrefabID = i;
         PartyManager.instance.Members.Add(hero);
 
         hero.CharInit(VFXManager.instance, UIManager.instance,
@@ -46,6 +47,9 @@ public class GameManager : MonoBehaviour
 
         InventoryManager.instance.AddItem(hero, 0);
         InventoryManager.instance.AddItem(hero, 2);
+
+        PartyManager.instance.SelectSingleHero(0);
+        UIManager.instance.ShowMagicToggles();
     }
 
     private void WarpPlayers() 

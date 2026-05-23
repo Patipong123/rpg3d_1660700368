@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.AI;
 using System.Collections.Generic;
 
 public class PartyManager : MonoBehaviour
@@ -154,8 +155,12 @@ public class PartyManager : MonoBehaviour
             heroData[i].prefabId = hero.PrefabID;
             heroData[i].curHp = hero.CurHP;
 
+            heroData[i].magicIds.Clear();
             for (int j = 0; j < hero.MagicSkills.Count; j++)
-                heroData[i].magicIds[j] = hero.MagicSkills[j].ID;
+                heroData[i].magicIds.Add(hero.MagicSkills[j].ID);
+
+            if (heroData[i].inventoryItemId.Length < hero.InventoryItem.Length)
+                heroData[i].inventoryItemId = new int[hero.InventoryItem.Length];
 
             for (int k = 0; k < hero.InventoryItem.Length; k++)
             {
@@ -176,7 +181,15 @@ public class PartyManager : MonoBehaviour
     public void LoadAllHeroData() 
     {
         int enterId = Settings.enterPointId;
-        Vector3 pos = MapManager.instance.EnterPoints[enterId].position;
+        Vector3 rawPos = MapManager.instance.EnterPoints[enterId].position;
+
+        // Raycast down to find actual ground surface
+        Vector3 sampleOrigin = rawPos + Vector3.up * 10f;
+        if (Physics.Raycast(sampleOrigin, Vector3.down, out RaycastHit rayHit, 30f))
+            rawPos = rayHit.point;
+
+        NavMesh.SamplePosition(rawPos, out NavMeshHit navHit, 20f, NavMesh.AllAreas);
+        Vector3 pos = navHit.hit ? navHit.position : rawPos;
 
         for (int i = 0; i < Settings.PartyCount; i++)
         {
@@ -186,6 +199,9 @@ public class PartyManager : MonoBehaviour
 
             if (i == 0)
                 heroObj.gameObject.tag = "Player";
+
+            NavMeshAgent agent = heroObj.GetComponent<NavMeshAgent>();
+            if (agent != null) agent.Warp(pos);
 
             Hero hero = heroObj.GetComponent<Hero>();
             hero.CharInit(VFXManager.instance, UIManager.instance,

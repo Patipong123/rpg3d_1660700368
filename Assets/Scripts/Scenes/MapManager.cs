@@ -14,11 +14,12 @@ public class MapManager : MonoBehaviour
         instance = this;
     }
 
-    public void GoToMap(string mapName, int enterPointId) 
+    public void GoToMap(string mapName, int enterPointId)
     {
         Settings.isWarping = true;
         Settings.enterPointId = enterPointId;
         Settings.PartyCount = PartyManager.instance.Members.Count;
+        Settings.lastWarpTime = Time.time;
 
         PartyManager.instance.SaveAllHeroData();
 

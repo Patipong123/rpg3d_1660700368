@@ -8,4 +8,6 @@ public static class Settings
 
     public static int enterPointId;
     public static int PartyCount;
+
+    public static float lastWarpTime = -999f;
 }

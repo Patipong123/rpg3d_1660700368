@@ -181,10 +181,9 @@ public abstract class Characters : MonoBehaviour
         SetState(CharState.Walk);
     }
 
-    protected void WalkUpdate() 
+    protected void WalkUpdate()
     {
         float distance = Vector3.Distance(transform.position, navAgent.destination);
-        Debug.Log(distance);
 
         if (distance <= navAgent.stoppingDistance)
             SetState(CharState.Idle);
