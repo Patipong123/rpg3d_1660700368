@@ -1,16 +1,18 @@
 using UnityEngine;
-using UnityEngine.TextCore.Text;
+using UnityEngine.InputSystem;
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-
+using System;
 
 public class LeftClick : MonoBehaviour
 {
     public static LeftClick instance;
 
+    // Event Driven: fired when an Item in the world is clicked
+    public static event Action<ItemPick> OnItemClicked;
+
     private Camera cam;
-    
 
     [SerializeField]
     private LayerMask layerMask;
@@ -24,16 +26,15 @@ public class LeftClick : MonoBehaviour
     {
         instance = this;
         cam = Camera.main;
-        layerMask = LayerMask.GetMask("Ground" , "Character" , "Building" , "Item");
-
+        layerMask = LayerMask.GetMask("Ground", "Character", "Building", "Item");
         boxSelection = UIManager.instance.SelectionBox;
     }
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Mouse.current.leftButton.wasPressedThisFrame)
         {
-            startPos = Input.mousePosition;
+            startPos = Mouse.current.position.ReadValue();
 
             if (EventSystem.current.IsPointerOverGameObject())
                 return;
@@ -41,47 +42,57 @@ public class LeftClick : MonoBehaviour
             ClearEverything();
         }
 
-        if (Input.GetMouseButton(0)) 
+        if (Mouse.current.leftButton.isPressed)
         {
-            //if (EventSystem.current.IsPointerOverGameObject())
-               // return;
-
-            UpdateSelectionBox(Input.mousePosition);
+            UpdateSelectionBox(Mouse.current.position.ReadValue());
         }
 
-        if (Input.GetMouseButtonUp(0))
+        if (Mouse.current.leftButton.wasReleasedThisFrame)
         {
-            ReleaseSelectionBox(Input.mousePosition);
-            TrySelect(Input.mousePosition);
+            Vector2 mousePos = Mouse.current.position.ReadValue();
+            ReleaseSelectionBox(mousePos);
+            TrySelect(mousePos);
         }
     }
 
-    private int SelectCharacter(RaycastHit hit) 
+    private int SelectCharacter(RaycastHit hit)
     {
         ClearEverything();
         Characters hero = hit.collider.GetComponent<Characters>();
-        //Debug.Log("Selected Char : " + hit.collider.gameObject);
 
         int i = PartyManager.instance.FindIndexFromClass(hero);
         UIManager.instance.ToggleAvatar[i].isOn = true;
         return i;
     }
 
-    private void TrySelect(Vector2 screenPos) 
+    // Fix: LeftClick now handles Item pickup via raycast (OnMouseDown ไม่ทำงานกับ New Input System)
+    public void SelectItem(RaycastHit hit)
+    {
+        ItemPick itemPick = hit.collider.GetComponent<ItemPick>();
+        if (itemPick == null) return;
+
+        OnItemClicked?.Invoke(itemPick); // Event Driven: notify subscribers
+        itemPick.PickUp();
+    }
+
+    private void TrySelect(Vector2 screenPos)
     {
         Ray ray = cam.ScreenPointToRay(screenPos);
         RaycastHit hit;
 
         int i = 0;
 
-        if (Physics.Raycast(ray, out hit, 1000, layerMask)) 
+        if (Physics.Raycast(ray, out hit, 1000, layerMask))
         {
-            switch (hit.collider.tag) 
+            switch (hit.collider.tag)
             {
                 case "Player":
                 case "Hero":
                     i = SelectCharacter(hit);
                     break;
+                case "Item":
+                    SelectItem(hit);
+                    return;
             }
         }
 
@@ -89,13 +100,13 @@ public class LeftClick : MonoBehaviour
             UIManager.instance.ToggleAvatar[i].isOn = true;
     }
 
-    private void ClearRingSelection() 
+    private void ClearRingSelection()
     {
         foreach (Characters h in PartyManager.instance.SelectChars)
             h.ToggleRingSelection(false);
     }
 
-    private void ClearEverything() 
+    private void ClearEverything()
     {
         foreach (Toggle t in UIManager.instance.ToggleAvatar)
         {
@@ -121,11 +132,10 @@ public class LeftClick : MonoBehaviour
         height = Mathf.Abs(height);
 
         boxSelection.sizeDelta = new Vector2(width, height);
-
         oldAnchoredPos = boxSelection.anchoredPosition;
     }
 
-    private void ReleaseSelectionBox(Vector2 mousePos) 
+    private void ReleaseSelectionBox(Vector2 mousePos)
     {
         Vector2 corner1;
         Vector2 corner2;
@@ -135,12 +145,12 @@ public class LeftClick : MonoBehaviour
         corner1 = oldAnchoredPos - (boxSelection.sizeDelta / 2);
         corner2 = oldAnchoredPos + (boxSelection.sizeDelta / 2);
 
-        foreach (Characters member in PartyManager.instance.Members) 
+        foreach (Characters member in PartyManager.instance.Members)
         {
             Vector2 unitPos = cam.WorldToScreenPoint(member.transform.position);
 
-            if ((unitPos.x > corner1.x && unitPos.x < corner2.x) 
-                && (unitPos.y > corner1.y && unitPos.y < corner2.y)) 
+            if ((unitPos.x > corner1.x && unitPos.x < corner2.x)
+                && (unitPos.y > corner1.y && unitPos.y < corner2.y))
             {
                 int i = PartyManager.instance.FindIndexFromClass(member);
                 UIManager.instance.ToggleAvatar[i].isOn = true;
@@ -148,6 +158,4 @@ public class LeftClick : MonoBehaviour
         }
         boxSelection.sizeDelta = new Vector2(0, 0);
     }
-
-    
 }

@@ -9,20 +9,21 @@ public class ItemPick : MonoBehaviour
     private InventoryManager inventoryManager;
     private PartyManager partyManager;
 
-    public void Init(Item item, InventoryManager invManager, PartyManager ptyManager) 
+    public void Init(Item item, InventoryManager invManager, PartyManager ptyManager)
     {
         this.item = item;
         inventoryManager = invManager;
         partyManager = ptyManager;
     }
 
-    private void PickUpItem(Characters hero) 
+    private void PickUpItem(Characters hero)
     {
         if (inventoryManager.AddItem(hero, item.ID))
             Destroy(gameObject);
     }
 
-    private void OnMouseDown()
+    // Fix: called by LeftClick.cs via raycast (OnMouseDown doesn't work with New Input System)
+    public void PickUp()
     {
         Debug.Log("Pick Up");
 

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 using System.Collections.Generic;
 
 public class RightClick : MonoBehaviour
@@ -12,20 +13,20 @@ public class RightClick : MonoBehaviour
     {
         Instance = this;
         cam = Camera.main;
-        layerMask = LayerMask.GetMask("Ground" , "Character" , "Building");
+        layerMask = LayerMask.GetMask("Ground", "Character", "Building");
     }
 
     void Update()
     {
-        if (Input.GetMouseButtonUp(1)) 
+        if (Mouse.current.rightButton.wasReleasedThisFrame)
         {
-            TryCommand(Input.mousePosition);
-        } 
+            TryCommand(Mouse.current.position.ReadValue());
+        }
     }
 
-    private void CommandToWalk(RaycastHit hit, List<Characters> heroes) 
+    private void CommandToWalk(RaycastHit hit, List<Characters> heroes)
     {
-        foreach (Characters h in heroes) 
+        foreach (Characters h in heroes)
         {
             if (h != null)
                 h.WalkToPosition(hit.point);
@@ -34,14 +35,14 @@ public class RightClick : MonoBehaviour
         CreateVFX(hit.point, VFXManager.instance.DoubleRingMarker);
     }
 
-    private void TryCommand(Vector2 screenPos) 
+    private void TryCommand(Vector2 screenPos)
     {
         Ray ray = cam.ScreenPointToRay(screenPos);
         RaycastHit hit;
 
-        if (Physics.Raycast(ray, out hit, 1000, layerMask)) 
+        if (Physics.Raycast(ray, out hit, 1000, layerMask))
         {
-            switch (hit.collider.tag) 
+            switch (hit.collider.tag)
             {
                 case "Ground":
                     CommandToWalk(hit, PartyManager.instance.SelectChars);
@@ -57,33 +58,32 @@ public class RightClick : MonoBehaviour
         }
     }
 
-    private void CreateVFX(Vector3 pos, GameObject vfxPrefab) 
+    private void CreateVFX(Vector3 pos, GameObject vfxPrefab)
     {
         if (vfxPrefab == null)
             return;
 
-        Instantiate(vfxPrefab,
-            pos + new Vector3(0f, 0.1f, 0f), Quaternion.identity);
+        Instantiate(vfxPrefab, pos + new Vector3(0f, 0.1f, 0f), Quaternion.identity);
     }
 
-    private void CommandToAttack(RaycastHit hit, List<Characters> heroes) 
+    private void CommandToAttack(RaycastHit hit, List<Characters> heroes)
     {
         Characters target = hit.collider.GetComponent<Characters>();
         Debug.Log("Attack: " + target);
 
-        foreach (Characters h in heroes) 
+        foreach (Characters h in heroes)
         {
             h.ToAttackCharacter(target);
         }
     }
 
-    private void CommandTalkToNPC(RaycastHit hit, List<Characters> heros) 
+    private void CommandTalkToNPC(RaycastHit hit, List<Characters> heros)
     {
         Characters npc = hit.collider.GetComponent<Characters>();
         Npc npc2 = hit.collider.GetComponent<Npc>();
         Debug.Log("Talk to NPC : " + npc);
 
-        if(heros.Count <= 0)
+        if (heros.Count <= 0)
             return;
 
         if (npc2 != null && npc2.CheckQuestList(QuestStatus.Finish) != null)
