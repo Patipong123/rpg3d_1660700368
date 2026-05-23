@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour
         {
             Settings.isNewGame = false;
             GeneratePlayerHero();
+            AudioManager.instance.PlayBGM(3);
         }
 
         if (Settings.isWarping)
