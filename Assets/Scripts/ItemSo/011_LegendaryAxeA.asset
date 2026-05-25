@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 855563a5a95a8d3449f4bd832aadc4f3, type: 3}
-  m_Name: 005_LegendarySwordA
+  m_Name: 011_LegendaryAxeA
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  id: 5
-  itemName: Legendary Sword
+  id: 11
+  itemName: Legendary Axe
   type: 4
-  icon: {fileID: 21300000, guid: 26ad4731fd5f1cb4ea77d296fe2365a4, type: 3}
-  power: 150
-  prefabID: 5
+  icon: {fileID: 21300000, guid: 9440721429424c84ab438e7a07c93ce3, type: 3}
+  power: 200
+  prefabID: 11
   normalPrice: 5000

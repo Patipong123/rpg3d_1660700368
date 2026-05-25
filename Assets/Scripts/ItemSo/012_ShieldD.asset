@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 855563a5a95a8d3449f4bd832aadc4f3, type: 3}
-  m_Name: 005_LegendarySwordA
+  m_Name: 012_ShieldD
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  id: 5
-  itemName: Legendary Sword
-  type: 4
-  icon: {fileID: 21300000, guid: 26ad4731fd5f1cb4ea77d296fe2365a4, type: 3}
-  power: 150
-  prefabID: 5
-  normalPrice: 5000
+  id: 12
+  itemName: Vylok Shield
+  type: 2
+  icon: {fileID: 21300000, guid: f1246272cee843b4eaaf713494002f06, type: 3}
+  power: 5
+  prefabID: 12
+  normalPrice: 100
