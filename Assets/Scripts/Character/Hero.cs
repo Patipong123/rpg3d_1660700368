@@ -6,6 +6,8 @@ public class Hero : Characters
     private int prefabId;
     public int PrefabID { get { return prefabId; } set { prefabId = value; } }
 
+    public bool SpawnedByCode = false;
+
     [SerializeField]
     private int exp;
     public int Exp { get { return exp; } set { exp = value; } }
@@ -42,10 +44,10 @@ public class Hero : Characters
     private int charisma;
     public int Charisma { get { return charisma; } set { charisma = value; } }
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        if (!SpawnedByCode && Settings.recruitedHeroPrefabIds.Contains(prefabId))
+            Destroy(gameObject);
     }
 
     // Update is called once per frame

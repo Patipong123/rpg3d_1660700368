@@ -9,6 +9,9 @@ public class InventoryManager : MonoBehaviour
     public GameObject[] ItemPrefabs { get { return itemPrefabs; } set { itemPrefabs = value; } }
 
     [SerializeField]
+    private GameObject lootBagPrefab;
+
+    [SerializeField]
     private ItemData[] itemData;
     public ItemData[] ItemData { get { return itemData; } set { itemData = value; } }
 
@@ -112,13 +115,16 @@ public class InventoryManager : MonoBehaviour
 
     }
 
-    public void SpawnDropInventory(Item[] items, Vector3 pos) 
+    public void SpawnDropInventory(Item[] items, Vector3 pos)
     {
-        for (int i = 0; i < items.Length; i++) 
-        {
-            if (items[i] != null)
-                SpawnDropItem(items[i], pos);
-        }
+        bool hasItems = false;
+        foreach (Item item in items)
+            if (item != null) { hasItems = true; break; }
+
+        if (!hasItems || lootBagPrefab == null) return;
+
+        GameObject bagObj = Instantiate(lootBagPrefab, pos, Quaternion.identity);
+        bagObj.AddComponent<LootBag>().Init(items, this, PartyManager.instance);
     }
 
     public void DrinkConsumableItem(Item item, int slotId) 

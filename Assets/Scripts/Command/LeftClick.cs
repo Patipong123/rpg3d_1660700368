@@ -68,11 +68,26 @@ public class LeftClick : MonoBehaviour
     // Fix: LeftClick now handles Item pickup via raycast (OnMouseDown ไม่ทำงานกับ New Input System)
     public void SelectItem(RaycastHit hit)
     {
-        ItemPick itemPick = hit.collider.GetComponent<ItemPick>();
+        LootBag lootBag = hit.collider.GetComponentInParent<LootBag>();
+        if (lootBag != null)
+        {
+            lootBag.PickUp();
+            RestoreHeroSelection();
+            return;
+        }
+
+        ItemPick itemPick = hit.collider.GetComponentInParent<ItemPick>();
         if (itemPick == null) return;
 
-        OnItemClicked?.Invoke(itemPick); // Event Driven: notify subscribers
+        OnItemClicked?.Invoke(itemPick);
         itemPick.PickUp();
+        RestoreHeroSelection();
+    }
+
+    private void RestoreHeroSelection()
+    {
+        if (PartyManager.instance.SelectChars.Count == 0 && PartyManager.instance.Members.Count > 0)
+            UIManager.instance.ToggleAvatar[0].isOn = true;
     }
 
     private void TrySelect(Vector2 screenPos)

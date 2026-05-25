@@ -136,10 +136,13 @@ public class PartyManager : MonoBehaviour
             hero.ReciveExp(eachHeroExp);
     }
 
-    public bool HeroJoinParty(Characters hero) 
+    public bool HeroJoinParty(Characters hero)
     {
-        if (members.Count >= 6)
+        if (members.Count >= 6 || members.Contains(hero))
             return false;
+
+        Hero joinedHero = (Hero)hero;
+        Settings.recruitedHeroPrefabIds.Add(joinedHero.PrefabID);
 
         hero.CharInit(VFXManager.instance, UIManager.instance,
                 InventoryManager.instance, this);
@@ -205,6 +208,7 @@ public class PartyManager : MonoBehaviour
             if (agent != null) agent.Warp(pos);
 
             Hero hero = heroObj.GetComponent<Hero>();
+            hero.SpawnedByCode = true;
             hero.CharInit(VFXManager.instance, UIManager.instance,
                 InventoryManager.instance, this);
             hero.CurHP = heroData[i].curHp;
@@ -228,6 +232,9 @@ public class PartyManager : MonoBehaviour
             hero.Exp = heroData[i].exp;
             hero.Level = heroData[i].level;
             hero.NextExp = heroData[i].nextExp;
+
+            hero.SpawnEquipmentVisuals();
+
             members.Add(hero);
         }
 

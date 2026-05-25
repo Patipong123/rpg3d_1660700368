@@ -376,6 +376,38 @@ public abstract class Characters : MonoBehaviour
             curHP = maxHP;
     }
 
+    public void SpawnEquipmentVisuals()
+    {
+        if (inventoryItem[16] != null)
+            SpawnShieldVisual(inventoryItem[16]);
+        if (inventoryItem[17] != null)
+            SpawnWeaponVisual(inventoryItem[17]);
+    }
+
+    private void SpawnWeaponVisual(Item item)
+    {
+        if (weaponObj != null)
+            Destroy(weaponObj);
+        weaponObj = Instantiate(invManager.ItemPrefabs[item.PrefabID], weaponHand);
+        Vector3 ps = weaponHand.lossyScale;
+        weaponObj.transform.localScale = new Vector3(1f / ps.x, 1f / ps.y, 1f / ps.z);
+        weaponObj.transform.localPosition = new Vector3(-8.5f, -4f, 3f);
+        weaponObj.transform.Rotate(-90f, 0f, 180f, Space.Self);
+        weapon = item;
+    }
+
+    private void SpawnShieldVisual(Item item)
+    {
+        if (shieldObj != null)
+            Destroy(shieldObj);
+        shieldObj = Instantiate(invManager.ItemPrefabs[item.PrefabID], shieldHand);
+        Vector3 ps = shieldHand.lossyScale;
+        shieldObj.transform.localScale = new Vector3(1f / ps.x, 1f / ps.y, 1f / ps.z);
+        shieldObj.transform.localPosition = new Vector3(-8.5f, -4f, 3f);
+        shieldObj.transform.Rotate(-90f, 0f, 180f, Space.Self);
+        shield = item;
+    }
+
     public void EquipShield(Item item)
     {
         shieldObj = Instantiate(invManager.ItemPrefabs[item.PrefabID], shieldHand);

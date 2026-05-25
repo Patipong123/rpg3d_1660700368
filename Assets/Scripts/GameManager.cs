@@ -40,6 +40,7 @@ public class GameManager : MonoBehaviour
         heroObj.tag = "Player";
 
         Hero hero = heroObj.GetComponent<Hero>();
+        hero.SpawnedByCode = true;
         hero.PrefabID = i;
         PartyManager.instance.Members.Add(hero);
 
