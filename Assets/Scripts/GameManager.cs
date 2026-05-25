@@ -47,8 +47,7 @@ public class GameManager : MonoBehaviour
         hero.CharInit(VFXManager.instance, UIManager.instance,
             InventoryManager.instance, PartyManager.instance);
 
-        InventoryManager.instance.AddItem(hero, 0);
-        InventoryManager.instance.AddItem(hero, 1);
+        
         
 
         PartyManager.instance.SelectSingleHero(0);
