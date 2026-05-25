@@ -48,15 +48,7 @@ public class GameManager : MonoBehaviour
 
         InventoryManager.instance.AddItem(hero, 0);
         InventoryManager.instance.AddItem(hero, 1);
-        InventoryManager.instance.AddItem(hero, 2);
-        InventoryManager.instance.AddItem(hero, 3);
-        InventoryManager.instance.AddItem(hero, 4);
-        InventoryManager.instance.AddItem(hero, 5);
-        InventoryManager.instance.AddItem(hero, 6);
-        InventoryManager.instance.AddItem(hero, 7);
-        InventoryManager.instance.AddItem(hero, 8);
-        InventoryManager.instance.AddItem(hero, 9);
-        InventoryManager.instance.AddItem(hero, 10);
+        
 
         PartyManager.instance.SelectSingleHero(0);
         UIManager.instance.ShowMagicToggles();
