@@ -376,10 +376,12 @@ public abstract class Characters : MonoBehaviour
             curHP = maxHP;
     }
 
-    public void EquipShield(Item item) 
+    public void EquipShield(Item item)
     {
         shieldObj = Instantiate(invManager.ItemPrefabs[item.PrefabID], shieldHand);
 
+        Vector3 ps = shieldHand.lossyScale;
+        shieldObj.transform.localScale = new Vector3(1f / ps.x, 1f / ps.y, 1f / ps.z);
         shieldObj.transform.localPosition = new Vector3(-8.5f, -4f, 3f);
         shieldObj.transform.Rotate(-90f, 0f, 180f, Space.Self);
 
@@ -387,9 +389,9 @@ public abstract class Characters : MonoBehaviour
         shield = item;
     }
 
-    public void UnEquipShield() 
+    public void UnEquipShield()
     {
-        if (shield  != null) 
+        if (shield  != null)
         {
             defensePower -= shield.Power;
             shield = null;
@@ -401,6 +403,8 @@ public abstract class Characters : MonoBehaviour
     {
         weaponObj = Instantiate(invManager.ItemPrefabs[item.PrefabID], weaponHand);
 
+        Vector3 ps = weaponHand.lossyScale;
+        weaponObj.transform.localScale = new Vector3(1f / ps.x, 1f / ps.y, 1f / ps.z);
         weaponObj.transform.localPosition = new Vector3(-8.5f, -4f, 3f);
         weaponObj.transform.Rotate(-90f, 0f, 180f, Space.Self);
 
