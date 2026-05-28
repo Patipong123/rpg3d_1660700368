@@ -668,13 +668,13 @@ public class UIManager : MonoBehaviour
         confirmPanel.SetActive(flag);
     }
 
-    public void RemoveMemberFromParty() 
+    public void RemoveMemberFromParty()
     {
         PartyManager.instance.RemoveHeroFromParty(idToRemove);
-        toggleAvatar[idToRemove].isOn = false;
+        toggleAvatar[idToRemove].SetIsOnWithoutNotify(false);
         MapToggleAvatar();
         ToggleConfirmPanel(false);
-        
+
     }
 
     private void ClearShopPanel() 

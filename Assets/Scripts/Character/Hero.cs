@@ -92,10 +92,11 @@ public class Hero : Characters
                 else
                     uiManager.PrepareDialogueBox(npc);
             }
-            else 
+            else
             {
                 Hero hero = curCharTarget.GetComponent<Hero>();
-                uiManager.PrepareHeroJoinParty(hero);
+                if (!partyManager.Members.Contains(hero))
+                    uiManager.PrepareHeroJoinParty(hero);
             }
             
 

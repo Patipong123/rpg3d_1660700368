@@ -35,7 +35,7 @@ public class GameManager : MonoBehaviour
         int i = Settings.playerPrefabId;
 
         GameObject heroObj = Instantiate(heroPregabs[i],
-            new Vector3(46f, 0, 38f), Quaternion.identity);
+            new Vector3(44f, 0, 35f), Quaternion.identity);
 
         heroObj.tag = "Player";
 

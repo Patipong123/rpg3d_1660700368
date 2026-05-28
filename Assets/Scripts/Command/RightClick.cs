@@ -89,6 +89,10 @@ public class RightClick : MonoBehaviour
         if (npc2 != null && npc2.CheckQuestList(QuestStatus.Finish) != null)
             return;
 
+        Hero targetHero = hit.collider.GetComponent<Hero>();
+        if (targetHero != null && PartyManager.instance.Members.Contains(targetHero))
+            return;
+
         heros[0].ToTalkToNPC(npc);
     }
 }
